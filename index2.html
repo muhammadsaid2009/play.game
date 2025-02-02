@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>p5.js Mobile Animation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let t = 0;
+        let y = 0;
+        let speed = 5;
+        let showText = false;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            noStroke();
+        }
+
+        function draw() {
+            background(186, 255, 232);
+
+            let groundY = height * 0.8;
+            let ballX = width / 2;
+
+            // Yerni chizish
+            fill(255, 255, 255);
+            rect(0, groundY, width, height - groundY);
+
+            // Parabolik harakat
+            y = -0.01 * t * t + 3.5 * t;
+
+            // Soya o'lchami va rangi
+            let grey = constrain(0.1 * y + 200, 0, 255);
+            let shadowSize = 0.2 * y + 50;
+
+            // Soyani chizish
+            fill(grey);
+            ellipse(ballX, groundY + 50, shadowSize, 10);
+
+            // Sharni chizish
+            let correctedY = groundY - y;
+            fill(71, 117, 255);
+            ellipse(ballX, correctedY, 50, 50);
+
+            if (y < 0) {
+                t = 0;
+            }
+
+            t += speed;
+
+            // Tugmalarni chizish
+            drawButton(width * 0.3, height * 0.9, 80, 50, "-", "red");
+            drawButton(width * 0.6, height * 0.9, 80, 50, "+", "green");
+
+            if (showText) {
+                fill(200, 10, 70);
+                textSize(40);
+                textAlign(CENTER, CENTER);
+                text("Qales!", width / 2, height * 0.4);
+            }
+        }
+
+        function drawButton(x, y, w, h, label, color) {
+            fill(color);
+            rect(x, y, w, h, 10);
+            fill(255);
+            textSize(30);
+            textAlign(CENTER, CENTER);
+            text(label, x + w / 2, y + h / 2);
+        }
+
+        function touchStarted() {
+            if (mouseX >= width * 0.3 && mouseX <= width * 0.3 + 80 && mouseY >= height * 0.9 && mouseY <= height * 0.9 + 50) {
+                if (speed > 1) {
+                    speed -= 1;
+                }
+            }
+            if (mouseX >= width * 0.6 && mouseX <= width * 0.6 + 80 && mouseY >= height * 0.9 && mouseY <= height * 0.9 + 50) {
+                if (speed < 20) {
+                    speed += 1;
+                }
+            }
+            return false;
+        }
+
+        function mousePressed() {
+            touchStarted(); // Kompyuter sichqonchasi uchun ham ishlaydi
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+    </script>
+</body>
+</html>
